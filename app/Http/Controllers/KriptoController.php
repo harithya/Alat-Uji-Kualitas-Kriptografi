@@ -41,8 +41,8 @@ class KriptoController extends Controller
 
     public function store(Request $request)
     {
-        $plainText = str_split(preg_replace('/[^a-zA-Z]+/', '', $request->plaintext));
-        $chipperText = str_split(preg_replace('/[^a-zA-Z]+/', '', $request->chippertext));
+        $plainText = str_split(strtolower(preg_replace('/[^a-zA-Z]+/', '', $request->plaintext)));
+        $chipperText = str_split(strtolower(preg_replace('/[^a-zA-Z]+/', '', $request->chippertext)));
         $result = [
             'plainText' => $this->calculateChar($plainText),
             'chipperText' => $this->calculateChar($chipperText),
@@ -50,7 +50,8 @@ class KriptoController extends Controller
         $array1 = collect($result['plainText'])->pluck('value')->toArray();
         $array2 = collect($result['chipperText'])->pluck('value')->toArray();
         $result['correlation'] = Correlation::r($array1, $array2);
-        // return $this->groupChar($result['plainText']);
+        $result['chartPlainText'] = $this->groupChar($result['plainText']);
+        $result['chartChipperText'] = $this->groupChar($result['chipperText']);
         return view('result', compact('result'));
     }
 }

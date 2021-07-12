@@ -62,9 +62,55 @@
                     </tr>
                 </table>
             </div>
-            <div class="tab-pane fade mb-5" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-
+            <div class="tab-pane fade " id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="mt-5 row">
+                    <div class="col-6">
+                        <div id="c1"></div>
+                    </div>
+                    <div class="col-6">
+                        <div id="c2"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    @push('script')
+        <script>
+            const chart = Highcharts.chart('c1', {
+                title: {
+                    text: 'Data Analisa Histogram Chipper Text'
+                },
+                subtitle: {
+                    text: 'Karakter huruf yang sering banyak muncul pada data tersebut'
+                },
+                xAxis: {
+                    categories: {!! json_encode(collect($result['chartPlainText'])->pluck('char')) !!}
+                },
+                series: [{
+                    type: 'column',
+                    colorByPoint: true,
+                    data: {!! json_encode(collect($result['chartPlainText'])->pluck('total')) !!},
+                    showInLegend: false
+                }]
+            });
+
+            Highcharts.chart('c2', {
+                title: {
+                    text: 'Data Analisa Histogram Plain Text'
+                },
+                subtitle: {
+                    text: 'Karakter huruf yang sering banyak muncul pada data tersebut'
+                },
+                xAxis: {
+                    categories: {!! json_encode(collect($result['chartChipperText'])->pluck('char')) !!}
+                },
+                series: [{
+                    type: 'column',
+                    colorByPoint: true,
+                    data: {!! json_encode(collect($result['chartChipperText'])->pluck('total')) !!},
+                    showInLegend: false
+                }]
+            });
+        </script>
+    @endpush
 @endsection
