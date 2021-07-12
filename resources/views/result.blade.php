@@ -15,6 +15,9 @@
         </ul>
         <div class="tab-content " id="myTabContent">
             <div class="tab-pane fade  show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="mt-5">
+                    <p>Untuk hasil akhirnya adalah <b>{{ number_format($result['correlation'], 4) }}</b></p>
+                </div>
                 <table class="table table-bordered mt-5">
                     <tr>
                         <th>No</th>
@@ -34,17 +37,18 @@
                     @for ($i = 0; $i < max(count($result['plainText']), count($result['chipperText'])); $i++)
                         <tr>
                             <td>{{ $i + 1 }}</td>
-                            <td>{{ $result['plainText'][$i] ?? '-' }}</td>
-                            <td>{{ $result['chipperText'][$i] ?? '-' }}</td>
-                            <td>{{ pow($result['plainText'][$i] ?? 0, 2) }}</td>
-                            <td>{{ pow($result['chipperText'][$i] ?? 0, 2) }}</td>
-                            <td>{{ ($result['plainText'][$i] ?? 0) * ($result['chipperText'][$i] ?? 0) }}</td>
+                            <td>{{ $result['plainText'][$i]['value'] ?? '-' }}</td>
+                            <td>{{ $result['chipperText'][$i]['value'] ?? '-' }}</td>
+                            <td>{{ pow($result['plainText'][$i]['value'] ?? 0, 2) }}</td>
+                            <td>{{ pow($result['chipperText'][$i]['value'] ?? 0, 2) }}</td>
+                            <td>{{ ($result['plainText'][$i]['value'] ?? 0) * ($result['chipperText'][$i]['value'] ?? 0) }}
+                            </td>
                             @php
-                                $x += $result['plainText'][$i] ?? 0;
-                                $y += $result['chipperText'][$i] ?? 0;
-                                $x2 += pow($result['plainText'][$i] ?? 0, 2);
-                                $y2 += pow($result['chipperText'][$i] ?? 0, 2);
-                                $xy += ($result['plainText'][$i] ?? 0) * ($result['chipperText'][$i] ?? 0);
+                                $x += $result['plainText'][$i]['value'] ?? 0;
+                                $y += $result['chipperText'][$i]['value'] ?? 0;
+                                $x2 += pow($result['plainText'][$i]['value'] ?? 0, 2);
+                                $y2 += pow($result['chipperText'][$i]['value'] ?? 0, 2);
+                                $xy += ($result['plainText'][$i]['value'] ?? 0) * ($result['chipperText'][$i]['value'] ?? 0);
                             @endphp
                         </tr>
                     @endfor

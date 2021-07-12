@@ -23,22 +23,34 @@ class KriptoController extends Controller
     {
         $tmp = [];
         foreach ($text as $key => $value) {
-            $tmp[$key] = array_search(strtolower($value), $this->abjad);
+            $tmp[$key]['char'] = $value;
+            $tmp[$key]['value'] = array_search(strtolower($value), $this->abjad);
         }
         return $tmp;
     }
 
+    public function groupChar($data)
+    {
+        return collect($data)->groupBy(['char'])->map(function ($val, $key) {
+            $tmp = [];
+            $tmp['char'] = $key;
+            $tmp['total'] = count($val);
+            return $tmp;
+        })->values();
+    }
+
     public function store(Request $request)
     {
-        $plainText = str_split(preg_replace('/\s+/', '', $request->plaintext));
-        $chipperText = str_split(preg_replace('/\s+/', '', $request->chippertext));
-
+        $plainText = str_split(preg_replace('/[^a-zA-Z]+/', '', $request->plaintext));
+        $chipperText = str_split(preg_replace('/[^a-zA-Z]+/', '', $request->chippertext));
         $result = [
             'plainText' => $this->calculateChar($plainText),
-            'chipperText' => $this->calculateChar($chipperText)
+            'chipperText' => $this->calculateChar($chipperText),
         ];
-
-        // dd(Correlation::r($result['plainText'], $result['chipperText']));
+        $array1 = collect($result['plainText'])->pluck('value')->toArray();
+        $array2 = collect($result['chipperText'])->pluck('value')->toArray();
+        $result['correlation'] = Correlation::r($array1, $array2);
+        // return $this->groupChar($result['plainText']);
         return view('result', compact('result'));
     }
 }
