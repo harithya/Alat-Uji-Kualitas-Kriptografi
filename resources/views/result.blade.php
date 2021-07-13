@@ -9,6 +9,10 @@
                     role="tab" aria-controls="home" aria-selected="true">Uji Korelasi</button>
             </li>
             <li class="nav-item" role="presentation">
+                <button class="nav-link " id="entropi-tab" data-bs-toggle="tab" data-bs-target="#entropi" type="button"
+                    role="tab" aria-controls="entropi" aria-selected="true">Entropi</button>
+            </li>
+            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
                     role="tab" aria-controls="contact" aria-selected="false">Analisis Histogram</button>
             </li>
@@ -62,6 +66,62 @@
                     </tr>
                 </table>
             </div>
+            <div class="tab-pane fade " id="entropi" role="tabpanel" aria-labelledby="entropi-tab">
+                <div class="row mt-5">
+                    <div class="col-4">
+                        <h5>Plaintext</h5>
+                        <p class="mb-4">Untuk hasil dari entropi plaintext adalah
+                            <b>{{ number_format($result['entropyPlainText']['result'], 4) }}</b>
+                        </p>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>No</th>
+                                <th>Huruf</th>
+                                <th>Jumlah</th>
+                            </tr>
+                            @php
+                                $i = 1;
+                            @endphp
+                            @foreach ($result['entropyPlainText']['data'] as $key => $row)
+                                <tr>
+                                    <td>{{ $i }}</td>
+                                    <td>{{ $row['char'] }}</td>
+                                    <td>{{ $row['total'] }}</td>
+                                </tr>
+                                @php
+                                    $i += 1;
+                                @endphp
+                            @endforeach
+                        </table>
+                    </div>
+                    <div class="col-4">
+                        <h5>ChipperText</h5>
+                        <p class="mb-4">Untuk hasil dari entropi chippertext adalah
+                            <b>{{ number_format($result['entropyChipperText']['result'], 4) }}</b>
+                        </p>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>No</th>
+                                <th>Huruf</th>
+                                <th>Jumlah</th>
+                            </tr>
+                            @php
+                                $i = 1;
+                            @endphp
+                            @foreach ($result['entropyChipperText']['data'] as $key => $row)
+                                <tr>
+                                    <td>{{ $i }}</td>
+                                    <td>{{ $row['char'] }}</td>
+                                    <td>{{ $row['total'] }}</td>
+                                </tr>
+                                @php
+                                    $i += 1;
+                                @endphp
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+            </div>
             <div class="tab-pane fade " id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <div class="mt-5 row">
                     <div class="col-6">
@@ -78,7 +138,7 @@
         <script>
             const chart = Highcharts.chart('c1', {
                 title: {
-                    text: 'Data Analisa Histogram Chipper Text'
+                    text: 'Data Analisa Histogram Plain Text'
                 },
                 subtitle: {
                     text: 'Karakter huruf yang sering banyak muncul pada data tersebut'
@@ -96,7 +156,7 @@
 
             Highcharts.chart('c2', {
                 title: {
-                    text: 'Data Analisa Histogram Plain Text'
+                    text: 'Data Analisa Histogram Chipper Text'
                 },
                 subtitle: {
                     text: 'Karakter huruf yang sering banyak muncul pada data tersebut'

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use MathPHP\Statistics\Correlation;
+use MathPHP\InformationTheory\Entropy;
 
 class KriptoController extends Controller
 {
@@ -39,6 +40,18 @@ class KriptoController extends Controller
         })->values();
     }
 
+    public function calculateEntropy($value)
+    {
+        $p = collect($value)->map(function ($value) {
+            $value['total'] = $value['total'] / 16;
+            return $value;
+        });
+        return [
+            'result' => Entropy::shannonEntropy($p->pluck('total')->toArray()),
+            'data' => $p->toArray()
+        ];
+    }
+
     public function store(Request $request)
     {
         $plainText = str_split(strtolower(preg_replace('/[^a-zA-Z]+/', '', $request->plaintext)));
@@ -52,6 +65,8 @@ class KriptoController extends Controller
         $result['correlation'] = Correlation::r($array1, $array2);
         $result['chartPlainText'] = $this->groupChar($result['plainText']);
         $result['chartChipperText'] = $this->groupChar($result['chipperText']);
+        $result['entropyPlainText'] = $this->calculateEntropy($this->groupChar($result['plainText']));
+        $result['entropyChipperText'] = $this->calculateEntropy($this->groupChar($result['chipperText']));
         return view('result', compact('result'));
     }
 }
